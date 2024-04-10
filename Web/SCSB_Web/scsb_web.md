@@ -9,6 +9,14 @@
 |QryUploLog.jsp | urlStr = "/SMS/servlet/QryLog.do?t=<%=System.currentTimeMillis() + session.getId()%>" |
 |QryLogController.java|/servlet/QryLog.do|
 
+### 記錄下載
+| 檔案 | 位置 |
+|---|---|
+|System_Service.cfgBean.xml | /SMS/QryUploLog.jsp |
+|QryUploLog.jsp | a href="#" onclick="checkData(2)">記錄下載 |
+|QryUploLog.jsp | url:"/SMS/servlet/QryLogServlet" //有分檔 -> /SMS/incSplitRecordFile.jsp|
+|QryLogServlet.java|doGet|
+
 ### 帳號管理->紀錄查詢
 * 進階管理 -> 帳號管理 -> 開始查詢 -> 修改帳號(點選任意一筆資料進入畫面) -> 發送紀錄
 
@@ -86,3 +94,9 @@
 | File | Method| Note|
 |---|---|---|
 |ContactDAO.java|getQueryContactServletSQLString|取得查詢通訊錄的SQL語法|
+
+## 紀錄查詢結果遮罩邏輯調整開發作業、測試方式
+* 此功能主要針對 [線上查詢]、[紀錄下載] 的內容作遮罩，有兩個地方
+1. 資料維護 -> 紀錄查詢
+2. 進階管理 -> 帳號管理 -> 開始查詢 -> 查詢結果(選擇一筆資料，會有新視窗) -> 發送紀錄
+* 遮罩功能開關參考 DB:SCB_test -> SMUser2 裡面的 Rights(第25個為遮罩功能)

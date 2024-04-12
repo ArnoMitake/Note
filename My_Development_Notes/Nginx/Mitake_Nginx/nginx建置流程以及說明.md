@@ -1,4 +1,4 @@
-# Home
+# nginx建置流程以及說明
 
 ## [專案架構說明]
 * nginx_server：線上Nginx Server的conf檔、SSL pem檔、雙向SSL pem檔、bat檔。

@@ -1,8 +1,18 @@
-# f2s 測試流程
+# f2s test process
 
-## 此專案測試資料可透過 api、web、簡訊快遞
+## Chose one Api、Web、簡訊快遞 to test this project
 
-## Processor_P14
+## _Step1: 測試前須知 (只要注意以下設定即可，發送api就行了)_
+* AppSettings.properties
+  1. ```f2s.select.execSpName``` have two mode
+     1. ```Sp_CamelF2S_SelectSMSourBulkNew_New``` only for short sms
+     2. ```Sp_CamelF2S_SelectSMSourBulkLU``` for long or Unicode sms
+  2. This project only check [Partkey]、[GroupID] data
+     1. ```f2s.scam.keyword.verification.groupID.list```
+     2. ```f2s.select.partKey```
+     3. ```DBexp.dbo.CamelF2SGroupIDConfig``` Can see all settings，can create a new row before not find data settings
+   
+~~~~## Processor_P14
 ### 測試流程
 1. postman call api
 2. GateWay 發送簡訊 delphi
@@ -39,4 +49,4 @@
 * AP相關資訊
   1. 確認 Conf 裡面的 ``` GroupID verification GroupID list```，與測試帳號的 GroupID 有無相同，流程會驗證
   2. 發送後 f2s 的 CamelWorkDetailLog 裡面會有中心序號(serialNo)，代表中心端已收到 
-  3. 用 serialNo 去 DBexp 確認 GroupID(表) 的狀態與這次測試的內容相關即可
+  3. 用 serialNo 去 DBexp 確認 GroupID(表) 的狀態與這次測試的內容相關即可~~~~

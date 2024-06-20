@@ -48,3 +48,59 @@ Dear Arno
 * 一階取資料，因中華簡訊數量為分則，預計會拆3個main 
 * 台哥、遠傳 流程一樣
 * 中華流程不同，待確認
+
+```
+/**
+     * 多則ReplyFlag轉為一筆ReplyFlag規則如下:
+     * ReplyFlag(則)	0	5	6	7
+     *              0	0	5	6	7
+     *              5	5	5	6	7
+     *              6	6	6	6	6
+     *              7	7	7	6	7
+     * @param exchange
+     * @throws Exception
+     */
+	@SuppressWarnings("unchecked")
+	public void concatenatedSMLONG(Exchange exchange) throws Exception {
+        Phase1Model oldModel = null;
+        List<Phase1Model> groupList = null;
+        
+		// 分群成筆和則
+		List<Phase1Model> phase1Models = exchange.getIn().getBody(List.class);
+
+        for (Phase1Model newModel : phase1Models) {
+            if(groupList == null) {
+                groupList = new ArrayList<>();
+                groupList.add(newModel);
+            }            
+            //找相同序號
+            oldModel  = groupList.stream()
+                    .filter(m -> newModel.getSerialNo().equals(m.getSerialNo()))
+                    .findFirst()
+                    .orElse(null);
+
+            if(oldModel == null) {
+                groupList.add(newModel);
+            } else {
+                swapPhase1Model(oldModel, newModel);
+            }
+        }
+		exchange.getIn().setBody(groupList);
+	}
+
+    private void swapPhase1Model(Phase1Model oldModel, Phase1Model newModel) {
+        Phase1Model model = oldModel;
+        String replyFlag = null;
+        if(oldModel.getReplyFlag().equals("6") || newModel.getReplyFlag().equals("6")) {
+            replyFlag = "6";
+        } else {
+            replyFlag = oldModel.getReplyFlag().compareTo(newModel.getReplyFlag()) >= 0
+                    ? oldModel.getReplyFlag()
+                    : newModel.getReplyFlag();
+        }
+        if (newModel.getReplyDT().compareTo(oldModel.getReplyDT()) > 0) {
+            model = newModel;
+        }
+        model.setReplyFlag(replyFlag);
+    }
+```

@@ -138,3 +138,91 @@ msgserver-backend-mms-redeliver -> msgserver-backend-mms-common version:0.0.1-SN
 sudo mkdir -p /log/MmsAP
 *.賦予權限
 sudo chmod -R 777 /log/MmsAP
+
+
+groovy 建置
+
+
+抓檔放到本機 *************************************
+\\File-server\share\企業簡訊事業群\簡訊研發部\公用資料夾\groovy-2.4.15.7z
+抓檔放到本機 *************************************
+
+複製到/opt底下 *************************************
+sudo cp /mnt/d/Program\ Files/groovy/groovy-2.4.15.tar /opt/
+複製到/opt底下 *************************************
+
+解壓縮  *************************************
+cd /opt/
+sudo tar xfv groovy-2.4.15.tar
+解壓縮  *************************************
+
+查看解壓縮的檔案 *************************************
+ls -tlr
+查看解壓縮的檔案 *************************************
+
+修改環境變數 *************************************
+sudo vi /etc/profile
+
+JAVA_HOME=/opt/java8_412
+JRE_HOME=${JAVA_HOME}/jre
+CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+MAVEN_HOME=/opt/apache-maven-3.5.2
+GROOVY_HOME=/opt/groovy-2.4.15
+PATH=${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GROOVY_HOME}/bin:$PATH
+export JAVA_HOME JRE_HOME CLASSPATH MAVEN_HOME GROOVY_HOME PATH
+
+修改環境變數 *************************************
+
+使環境變數生效 *************************************
+source /etc/profile
+使環境變數生效 *************************************
+
+查看有無生效 *************************************
+groovy -version
+查看有無生效 *************************************
+
+建立資料夾 *************************************
+sudo mkdir /SMS
+建立資料夾 *************************************
+
+
+
+資料夾權限 *************************************
+sudo setfacl -R -m g:grp_ops_ad:rwx /SMS
+sudo setfacl -m d:g:grp_ops_ad:rwx /SMS
+
+sudo setfacl -R -m g:grp_ap:rwx /SMS
+sudo setfacl -m d:g:grp_ap:rwx /SMS
+資料夾權限 *************************************
+
+
+用 smsc 去做
+crontab -e
+* * * * * /SMS/GroovyMonitor/runMonitor.sh >> /SMS/Syslog/test.log 2>&1
+          tail -f /var/log/syslog
+
+
+ACL權限請參考 Ubuntu 帳號建置的 SMS 目錄設定
+sudo setfacl -R -m g:grp_ops_ad:rwx /SMS			
+sudo setfacl -m d:g:grp_ops_ad:rwx /SMS
+
+sudo setfacl -R -m g:grp_ap:rwx /SMS
+sudo setfacl -m d:g:grp_ap:rwx /SMS
+Ubuntu 帳號建置 - Synology Office 文件 (mitake.com.tw)
+
+
+1. sms 路徑會調整
+2. 研究smsc啟service 其他user使用 groovymonitor 也要可以看到程式有無執行中
+
+用 sudo 可查看 需設置visudo nopasswd
+
+研究非sudo查看
+sudo setfacl -R -m g:grp_ap:rwx /opt/java8_412/bin/jps
+
+sudo setfacl -m u:arno:rx /opt/java8_412/bin/jps
+
+sudo setfacl -m u:arno:r /tmp/hsperfdata_103011_ops
+sudo setfacl -R -m u:arno:r /tmp/hsperfdata_103011_ops
+
+sudo setfacl -m u:arno:rx /tmp/hsperfdata_smsc/
+sudo setfacl -R -m u:arno:rx /tmp/hsperfdata_smsc/

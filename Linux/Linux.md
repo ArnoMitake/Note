@@ -156,6 +156,10 @@ cd /opt/
 sudo tar xfv groovy-2.4.15.tar
 解壓縮  *************************************
 
+壓縮檔案 *************************************
+tar -cvf /var/backups/msgchannel-job-main.tar /usr/local/msgchannel-job-main
+壓縮檔案 *************************************
+
 查看解壓縮的檔案 *************************************
 ls -tlr
 查看解壓縮的檔案 *************************************
@@ -226,3 +230,45 @@ sudo setfacl -R -m u:arno:r /tmp/hsperfdata_103011_ops
 
 sudo setfacl -m u:arno:rx /tmp/hsperfdata_smsc/
 sudo setfacl -R -m u:arno:rx /tmp/hsperfdata_smsc/
+
+sudo setfacl -m u:arno:rx /opt/java8_412/bin/
+sudo setfacl -R -m u:arno:rx /opt/java8_412/bin/
+
+
+測試 systemctl 啟動時的 log
+# 查看最新的 100 筆日誌記錄
+journalctl -u example-service.service -n 100
+# 即時查看日誌
+journalctl -u example-service.service -f
+# 查看今天的日誌
+journalctl -u example-service.service --since today
+# 查看特定時段的日誌
+journalctl -u example-service.service --since "2024-06-21 12:00:00" --until "2024-06-21 14:59:59"
+
+************ windows -> Linux MBean
+D:\Program Files\java\jdk1.8.0_321\bin\jconsole.exe
+************ Linux MBean
+下載  jmxterm
+sudo curl -L -o jmxterm.jar https://github.com/jiaqi/jmxterm/releases/download/v1.0.0/jmxterm-1.0.0-uber.jar
+執行jar
+java -jar jmxterm.jar
+連線
+open <pid>
+查看 bean
+Beans
+進入 Mbean folder
+Bean <MBean_Name>
+查看 MBean Method
+info
+執行 Method (params 空白區分)
+run <Method_name> params
+離開
+exit
+
+******** auto mount
+sudo nano /etc/fstab
+//10.3.2.116/gw_mms_att /home/arno/gw_mms_att cifs username=smsc,password=smb123,uid=arno,gid=grp_ap,port=8445,iocharset=utf8 0 0
+sudo mount -a
+df -h
+wsl --shutdown
+wsl

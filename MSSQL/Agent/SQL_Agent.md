@@ -1,7 +1,7 @@
 # SQL Agent (SQL排程)
 
 ## 2024/08/05 每日寄出有嫌疑名單報表需求
-* ### D:\工作事項\2024_08_05_每日寄出有嫌疑名單報表需求
+* ### D:\工作事項\20240805_每日寄出有嫌疑名單報表需求
 * 需求如下:
 > ![img.png](image/img.png)
 * 測試用sql如下:
@@ -31,7 +31,7 @@ VALUES
     ('2024-01-01 10:00:00'),
     ('2024-01-02 11:00:00'),
     ('2024-01-02 15:00:00'),
-    ('2024-08-05 00:00:00'),
+    ('20ㄒ24-08-05 00:00:00'),
     ('2024-08-05 23:59:59'),
     ('2024-08-05 12:00:00');
 --宣告變數
@@ -51,12 +51,12 @@ exec msdb.dbo.sysmail_help_account_sp
 exec msdb.dbo.sysmail_help_profile_sp
 --執行發送mail
 exec msdb.dbo.sp_send_dbmail 
-				@profile_name	= 'mo',
-				--'smsmail', --發送者
-				@recipients = 'arno@mitake.com.tw', --收件者
-				@subject = 'test',  
-				@body = '123',  
-				@body_format = 'TEXT'; 	
+					@profile_name	= 'mo',--發送者
+					@from_address = 'service@mitake.com.tw',
+					@recipients = 'arno@mitake.com.tw;miumiu@mitake.com.tw', --收件者
+					@subject = '【二站每日寄出有嫌疑名單報表】',  
+					@body = @tablehtml,  
+					@body_format = 'html'; 		
 --查看mail發送狀態
 SELECT * FROM msdb.dbo.sysmail_allitems
 --查看發送結果訊息

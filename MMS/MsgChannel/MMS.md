@@ -149,18 +149,31 @@ GO
 1. API發送 -> msgapigw-main route[HttpApiGW_MMS_Route]
 2. msgapigw-main(API) 發送簡訊 -> msgchannel-main route(channelService)
 3. msgchannel-main(channel) 接收簡訊並傳送至中心 -> msgserver-gw-mms-json route(serverService)
-4. msgserver-gw-mms-json(server-gw) 中心接收轉為json通知待發送程式  ->  
-   1. msgserver-backend-mms-importer(Importer接收) Multicast:notify(廣播多個地方接收)有各自對應的 app.global.name
-   2. msgserver-backend-mms-orderimporter(orderimporter接收)
-   3. importer(及時) 與 orderimporter(預約) 差異在 OrderTime 時間 orderimporter 的時間設定在 conf
+> 4. msgserver-gw-mms-json(server-gw) 中心接收轉為json通知待發送程式  ->  
+>    1. msgserver-backend-mms-importer(Importer接收) Multicast:notify(廣播多個地方接收)有各自對應的 app.global.name
+>    2. msgserver-backend-mms-orderimporter(orderimporter接收)
+>    3. importer(及時) 與 orderimporter(預約) 差異在 OrderTime 時間 orderimporter 的時間設定在 conf
 5. msgserver-backend-mms-importer(server-gw) 待發送程式發送至業者 -> MMSSourDeliver_xxx (sender[deliver]) 業者有很多隻
-6. deliver 分成兩個區塊發送
-   1. 失敗重新發送 route[redeliverNotify] (redeliverXXX)
-   2. 待查資料處理 route[deliverReportNotify] (deliverReporterXXX)
-7. redeliverXXX 失敗重新發送 (會寫回 MMSSourDeliver_XXX_XXX 的 table，並再次 call MMSSourDeliver_XXX(sender[deliver]))
-8. deliverReporterXXX 待查資料處理 (分成三個區塊)
-9. drhook-main(server-gw) -> url -> channel
-10. drreply-main(server-gw) -> url -> channel
+> 6. deliver 分成兩個區塊發送
+>    1. 失敗重新發送 route[redeliverNotify] (redeliverXXX)
+>       1. redeliverXXX 失敗重新發送 (會寫回 MMSSourDeliver_XXX_XXX 的 table，並再次 call MMSSourDeliver_XXX_X(sender[deliver]))
+>       2. MMSSourDeliver_XXX_X 一階備援處理 (後續通知分區兩塊，redeliverXXX、deliverReporterXXX)
+>    2. 待查資料處理 route[deliverReportNotify] (deliverReporterXXX)
+>       1. deliverReporterXXX 待查資料處理 (後續通知分三個區塊，deliverReportGroup、drHook、MMSDrQuerier_XXX_X)
+>       2. deliverReportGroup 一階回報到群組 
+>          1. 資料都跟此表相關 Message_Server.dbo.MMSDeliverReportGroupWait 完成會刪除資料
+>          2. 會更新 Message_GroupSendData.dbo.[GroupID] 的狀態
+>       3. drHook 發送DR結果回報 channel 
+>          1. 資料來源: Message_Server.dbo.MMSDrHookWait
+>          2. 發送drUrl設定: Message_GroupInfo.dbo.ApiAuthInfo
+>          3. 失敗重新發送: Message_Server.dbo.MMSDrHookRetry
+>       4. MMSDrQuerier_XXX_X
+> 
+> 
+
+7. 
+8. drhook-main(server-gw) -> url -> channel
+9. drreply-main(server-gw) -> url -> channel
 
 ### 2024/08/02 黑名單機制測試
 * api(JMeter) 參考 MMS_stage_黑名單機制.jmx

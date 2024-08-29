@@ -62,3 +62,5 @@ SELECT top (2) * FROM DBexp.dbo.SMMO WITH(NOLOCK) ORDER BY Stamp DESC
 --INSERT DBexp.dbo.SMMO (Stamp, MID, MsgID, SrcNo, DestNo, MsgData) VALUES (CONVERT(VARCHAR, GETDATE(), 120), '17218', '20240723020912', '0900612345', '17218', 'P路由MO雙向測試2')
 ```
 
+## 20240819 p路由bug(陳述式沒有傳回結果集)
+* Sp_CamelF2S_PRoute 的 result set 沒有回傳值，Dao 這寫法(ResultSet rs = cs.executeQuery();)會造成沒有結果集報錯

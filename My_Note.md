@@ -39,3 +39,4 @@
 2. 去 plugins 下載 IDE Eval Reset
 3. 安裝完後去 help 裡面看 Eval Reset 的時間有沒有刷新
 4. 舊版時間有刷新，即可安裝新版 intellij，只要有重製時間新版就會跳出免費30天試用，選試用後去 help -> Register 看到期時間
+* 目前測試這招需要舊版的intellij重製時間成功後，再重開新版的才有效果

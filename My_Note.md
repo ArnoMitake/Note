@@ -31,3 +31,10 @@
 > var hide_article_box=document.getElementsByClassName(' hide-article-box')[0];
 > hide_article_box.parentElement.removeChild(hide_article_box);
 > ```
+
+## intellij 重製時間 (連同最新版intellij也適用)
+* intellij plugins Marketplace find 'IDE Eval Reset' (此工具只支援到 2021.2.3 不在更新)
+1. 先去安裝 intellij v2021.2.2 版
+2. 去 plugins 下載 IDE Eval Reset
+3. 安裝完後去 help 裡面看 Eval Reset 的時間有沒有刷新
+4. 舊版時間有刷新，即可安裝新版 intellij，只要有重製時間新版就會跳出免費30天試用，選試用後去 help -> Register 看到期時間

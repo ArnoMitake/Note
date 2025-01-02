@@ -34,6 +34,7 @@
 
 ## intellij 重製時間 (連同最新版intellij也適用)
 * intellij plugins Marketplace find 'IDE Eval Reset' (此工具只支援到 2021.2.3 不在更新)
+* https://www.jetbrains.com/idea/download/other.html
 1. 先去安裝 intellij v2021.2.2 版
 2. 去 plugins 下載 IDE Eval Reset
 3. 安裝完後去 help 裡面看 Eval Reset 的時間有沒有刷新

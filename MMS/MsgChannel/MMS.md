@@ -145,7 +145,7 @@ GO
 > select * from [Message_Channel].[dbo].[MMSDeliverTemp] with(nolock)
 > select * from [Message_Channel].[dbo].MMSDeliverAttachTemp with(nolock)
 
-### 2024/07/30 補上流程
+### 2025/03/07 補上流程，本次測試已到電信業者二階
 1. API發送 -> msgapigw-main route[HttpApiGW_MMS_Route]
 2. msgapigw-main(API) 發送簡訊 -> msgchannel-main route(channelService)
 3. msgchannel-main(channel) 接收簡訊並傳送至中心 -> msgserver-gw-mms-json route(serverService)
@@ -154,11 +154,12 @@ GO
 >    2. msgserver-backend-mms-orderimporter(orderimporter接收)
 >    3. importer(及時) 與 orderimporter(預約) 差異在 OrderTime 時間 orderimporter 的時間設定在 conf
 5. msgserver-backend-mms-importer(server-gw) 待發送程式發送至業者 -> MMSSourDeliver_xxx (sender[deliver]) 業者有很多隻
-6. deliver 分成兩個區塊發送
+6. 這裡開始記得起 mock
+7. deliver 分成兩個區塊發送
    1. 失敗重新發送 route[redeliverNotify] (redeliverXXX)
       1. redeliverXXX 失敗重新發送 (會寫回 MMSSourDeliver_XXX_XXX 的 table，並再次 call MMSSourDeliver_XXX_X(sender[deliver]))
       2. MMSSourDeliver_XXX_X 一階備援處理 (後續通知分區兩塊，redeliverXXX、deliverReporterXXX)
-   2. 待查資料處理 route[deliverReportNotify] (deliverReporterXXX)
+   2. 待查資料處理 route[deliverReportNotify] (deliverReporterXXX) 此為一階，記得打mock
       1. deliverReporterXXX 待查資料處理 (後續通知分三個區塊，deliverReportGroup、drHook、MMSDrQuerier_XXX_X)
          1. deliverReportGroup 一階回報到群組 
             1. 資料都跟此表相關 Message_Server.dbo.MMSDeliverReportGroupWait 完成會刪除資料
@@ -167,8 +168,8 @@ GO
             1. 資料來源: Message_Server.dbo.MMSDrHookWait
             2. 發送drUrl設定: Message_GroupInfo.dbo.ApiAuthInfo
             3. 失敗重新發送: Message_Server.dbo.MMSDrHookRetry
-         3. MMSDrQuerier_XXX_X (後續通知 drReporterXXX)
-            1. 
+         3. drquerier MMSDrQuerier_XXX_X (後續通知 drReporterXXX) 二階部分，記得打mock
+            1. 會把資料寫回[Message_Server].[dbo].[MMSDrInQuery_XXX_0]
    3. drhook-main(server-gw) -> url -> channel
    4. drreply-main(server-gw) -> url -> channel
 

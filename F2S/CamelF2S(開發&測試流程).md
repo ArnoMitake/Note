@@ -15,6 +15,7 @@
 
 ## 請注意!!!!!!!!!!!!!!!!!!!!!!!!!!! 很容易忘記
 * DBexp SpFile2SMServerBulk 這裡面的群組是寫死的 有要測新的群組要進去加
+* Query SpLmPost、SpULmPost
 
 ## 2024-09-27 F2S 經銷商名單測試
 * 本次改動 -> Sp_CamelF2S_InsertJob_LU_20240502

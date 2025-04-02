@@ -316,3 +316,4 @@ public int smsCount(String mobileNo, String message) throws Exception {
 
 ### 2025 4月離職
 **lib升級，新增自動排程，中國信託主動回報，台新人壽中介開發，windows服務轉移至Linux環境**
+![台新人壽中介.png](%E5%8F%B0%E6%96%B0%E4%BA%BA%E5%A3%BD%E4%B8%AD%E4%BB%8B.png)
